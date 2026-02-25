@@ -1,0 +1,16 @@
+2026-02-25
+FEAT:   Implemented basic Smarty 5 initialization in `config/smarty_init.php`.
+FEAT:   Added root `index.php` for automatic redirection to login.
+FEAT:   Developed `login.php` controller and `login.tpl` with dual Login/Register functionality.
+FEAT:   Integrated MySQL database `ANSEP3` with `users` table via `scripts/setup_database.sql`.
+FEAT:   Implemented secure PDO connection in `config/database.php`.
+FEAT:   Integrated authentication logic using `password_hash` and `password_verify`.
+FEAT:   Established PHP session management for authenticated users.
+FEAT:   Created protected `loggedin.php` dashboard with user-specific greetings.
+FEAT:   Added `logout.php` to handle secure session termination.
+FEAT:   Enhanced UI with `login_style.css` and professional `logo.png` branding.
+FEAT:   Localized the entire user interface into English.
+FIX:    Fixed Smarty instantiation error by using the correct `Smarty\Smarty` namespace for version 5.
+FIX:    Adjusted PHP tags and Smarty assignments for user data (`user_email`, `user_id`) in dashboard.
+NOTE:   Project structure follows a clean separation of concerns (config, public controllers, and templates).
+TODO:   Implement real session-based application features beyond the basic welcome dashboard.
