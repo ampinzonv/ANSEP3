@@ -1,0 +1,17 @@
+{
+    "name": "apinzon/ansep3",
+    "require": {
+        "smarty/smarty": "^5.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Apinzon\\Ansep3\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Andres Pinzon",
+            "email": "ampinzonv@unal.edu.co"
+        }
+    ]
+}
