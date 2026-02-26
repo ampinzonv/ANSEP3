@@ -1,24 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - ANSEP3</title>
-    <link rel="stylesheet" href="css/login_style.css">
-</head>
-<body>
-    <div class="container">
-        <div class="card" style="text-align: center;">
-            <div style="margin-bottom: 2rem;">
-                 <img src="../public/img/logo.png" alt="ANSEP3 Logo" width="300" height="100">
+{extends file="layout.tpl"}
+
+{block name="title"}Dashboard - ANSEP3{/block}
+
+{block name="content"}
+    <h1>Welcome Back, {$user_name}</h1>
+    <p style="color: var(--text-muted); margin-bottom: 2.5rem;">Use the navigation menu above to start exploring and analyzing models, or browse our specialized modeling areas below.</p>
+
+    <div class="cards-grid">
+        <!-- Card 1: Brain Cell Metabolic Models -->
+        <div class="info-card">
+            <div class="card-icon">
+                <img src="img/GEM_100px.png" alt="Brain Cell Models">
             </div>
-            <h1>Welcome back, {$user_name}!</h1>
-            <p style="color: #666; margin-bottom: 2rem;">You have successfully logged in to ANSEP3.</p>
-            <p style="color: #666; margin-bottom: 2rem;">Your email is: {$user_email}</p>
-            <p style="color: #666; margin-bottom: 2rem;">Your id is: {$user_id}</p>
-            
-            <a href="logout.php" class="btn-primary" style="text-decoration: none; display: inline-block;">Log Out</a>
+            <h2>Brain Cell Metabolic Models</h2>
+            <p>Designed to simulate the biochemical processes within neurons and glial cells, providing insights into their metabolic interactions and energy dynamics.<br><br>
+            These models help researchers explore how cellular metabolism contributes to brain function and its role in neurodegenerative diseases, paving the way for targeted therapeutic strategies.</p>
+            <a href="#" class="btn-card-info">More info on our brain cell models</a>
+        </div>
+
+        <!-- Card 2: Microbiota Metabolic Models -->
+        <div class="info-card">
+            <div class="card-icon">
+                <img src="img/MICROBIOMA_100px.png" alt="Microbiota Models">
+            </div>
+            <h2>Microbiota Metabolic Models</h2>
+            <p>By simulating metabolic exchanges and community dynamics, our microbiota models provide valuable insights into the relationships between the human microbiota and the brain.<br><br>
+            This research is at the forefront of understanding how microbial imbalances may contribute to neurodegenerative conditions, paving the way for innovative treatments and preventive strategies.</p>
+            <a href="#" class="btn-card-info">More info on our Microbiome models</a>
+        </div>
+
+        <!-- Card 3: Online metabolic modeling -->
+        <div class="info-card">
+            <div class="card-icon">
+                <img src="img/HEATMAP_100px.png" alt="Online Modeling">
+            </div>
+            <h2>Online metabolic modeling</h2>
+            <p>ANSeP provides a powerful platform for performing online metabolic analyses, enabling researchers to simulate and explore metabolic networks directly from their web browser.<br><br>
+            With tools like Flux Balance Analysis (FBA), Flux Variability Analysis (FVA), and gene knockout simulations, ANSeP allows users to investigate metabolic pathways, optimize objectives, and study the effects of genetic or environmental changes on metabolic systems.</p>
+            <a href="#" class="btn-card-info">More info on Metabolic modeling</a>
         </div>
     </div>
-</body>
-</html>
+{/block}

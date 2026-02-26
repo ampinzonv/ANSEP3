@@ -8,9 +8,20 @@ FEAT:   Integrated authentication logic using `password_hash` and `password_veri
 FEAT:   Established PHP session management for authenticated users.
 FEAT:   Created protected `loggedin.php` dashboard with user-specific greetings.
 FEAT:   Added `logout.php` to handle secure session termination.
-FEAT:   Enhanced UI with `login_style.css` and professional `logo.png` branding.
-FEAT:   Localized the entire user interface into English.
-FIX:    Fixed Smarty instantiation error by using the correct `Smarty\Smarty` namespace for version 5.
-FIX:    Adjusted PHP tags and Smarty assignments for user data (`user_email`, `user_id`) in dashboard.
+
+2026-02-26
+FEAT:   Implemented the full FBA execution cycle: `run_fba_analysis.php` (PHP runner) and `fba_analysis.py` (COBRApy core).
+FEAT:   Integrated Conda environment management for secure and isolated Python analysis execution.
+FEAT:   Developed `analysis_result.tpl` to provide clear feedback and download links for simulation results.
+FEAT:   Centralized all analysis-related styles (alerts, code boxes, forms) in `platform.css`.
+FEAT:   Added "Default" objective option to FBA analysis, allowing use of model-stipulated objectives.
+FEAT:   Implemented advanced result filtering in FBA: "Show only active fluxes" and custom "Top N" reaction limits.
+FEAT:   Added "Analysis Name" field to FBA simulations for easier identification and historical tracking.
+FEAT:   Updated `fba_analysis.py` to include the custom analysis name in the generated result headers.
+FEAT:   Enhanced FBA form with interactive radio buttons to toggle between Default and Custom objectives.
+FEAT:   Added "Home" link to navigation menu for easy dashboard access.
 NOTE:   Project structure follows a clean separation of concerns (config, public controllers, and templates).
-TODO:   Implement real session-based application features beyond the basic welcome dashboard.
+TODO: Implement a JSON output of results.
+TODO: Results must be saved in a folder and database, because some results also have figures, pdfs or other type of data.
+TODO: Implement a way of retriving the results from the database and folder.
+
