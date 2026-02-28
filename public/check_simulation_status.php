@@ -37,6 +37,8 @@ try {
             // Load scientific results from JSON
             $json_data = json_decode(file_get_contents($json_file), true);
             $sci_status = $json_data['simulation_results']['status'] ?? 'Optimal';
+            
+            // FVA doesn't have a single objective_value
             $obj_val = $json_data['simulation_results']['objective_value'] ?? null;
 
             $update = $pdo->prepare("

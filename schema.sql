@@ -73,6 +73,8 @@ CREATE TABLE `simulations` (
   `model_id` int DEFAULT NULL,
   `model_filename` varchar(255) DEFAULT NULL,
   `objective_value` double DEFAULT NULL,
+  `analysis_type` enum('FBA','FVA') DEFAULT 'FBA',
+  `execution_status` varchar(50) DEFAULT 'processing',
   `status` varchar(50) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

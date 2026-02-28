@@ -56,11 +56,17 @@ $smarty->assign('user_id', $user_id);
 $smarty->assign('analysis_id', $analysis_id);
 $smarty->assign('result_data', $result_data);
 $smarty->assign('result_file', basename($json_file));
-$smarty->assign('success', true);
+$smarty->assign('success', $success);
 // Security: Sanitize output to avoid Information Disclosure
 $output = "Result loaded from archive: " . $analysis_id;
 $sanitized_output = str_replace(BASE_PATH, '[ROOT]', $output);
 
 $smarty->assign('output', $sanitized_output);
 
-$smarty->display('analysis_result.tpl');
+// Choose template based on analysis type (FBA is default)
+$template = 'analysis_result.tpl';
+if (isset($result_data['analysis_identity']['type']) && $result_data['analysis_identity']['type'] === 'FVA') {
+    $template = 'fva_result.tpl';
+}
+
+$smarty->display($template);

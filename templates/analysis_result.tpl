@@ -8,7 +8,7 @@
             <h1>Analysis Status</h1>
             {if $success}
                 <div class="alert alert-success">
-                    <strong>Success!</strong> The FBA simulation completed successfully.
+                    <strong>Success!</strong> The metabolic simulation completed successfully.
                 </div>
             {else}
                 <div class="alert alert-danger">
