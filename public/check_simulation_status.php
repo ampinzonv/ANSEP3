@@ -4,13 +4,14 @@
  * Checks for the existence of the result JSON file.
  */
 
+session_start();
 require_once __DIR__ . '/../config/paths.php';
 require_once __DIR__ . '/../config/database.php';
 
 header('Content-Type: application/json');
 
 $analysis_id = $_GET['id'] ?? null;
-$user_id = $_SESSION['user_id'] ?? 1; // Fallback for debugging, though session should be active
+$user_id = $_SESSION['user_id'] ?? 1;
 
 if (!$analysis_id) {
     echo json_encode(['status' => 'error', 'message' => 'Missing Analysis ID']);
@@ -69,7 +70,7 @@ try {
     // (useful for early crashes or syntax errors)
     if (file_exists($log_file) && filesize($log_file) > 0) {
         $log_content = file_get_contents($log_file);
-        if (str_contains($log_content, 'Traceback') || str_contains($log_content, 'Error:')) {
+        if (str_contains($log_content, 'Traceback (most recent call last):') || str_contains($log_content, 'Exception:')) {
             $update = $pdo->prepare("UPDATE simulations SET execution_status = 'error' WHERE analysis_id = ?");
             $update->execute([$analysis_id]);
             echo json_encode(['status' => 'error']);

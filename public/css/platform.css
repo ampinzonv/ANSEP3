@@ -173,6 +173,13 @@ body {
     color: #4a5568;
 }
 
+.badge-outline {
+    background-color: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
 /* Sober Status Text (No Background) */
 .status-text {
     font-weight: 400;

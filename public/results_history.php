@@ -25,6 +25,7 @@ $stmt = $pdo->prepare("
         objective_value as objective, 
         status, 
         execution_status,
+        analysis_type as type,
         created_at as raw_date
     FROM simulations 
     WHERE user_id = ? 
@@ -49,6 +50,7 @@ foreach ($raw_history as $row) {
         'model'           => $row['model'],
         'objective'       => $row['objective'],
         'status'          => $row['status'],
+        'type'            => $row['type'],
         'execution_status' => $row['execution_status']
     ];
 }

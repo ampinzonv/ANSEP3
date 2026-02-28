@@ -35,9 +35,10 @@
             <li class="nav-item">
                 <a href="#" class="nav-link chevron">Model Analysis</a>
                 <div class="dropdown">
-                    <a href="fba_analysis.php" class="dropdown-link">FBA</a>
-                    <a href="fva_analysis.php" class="dropdown-link">FVA</a>
-                    <a href="#" class="dropdown-link">Robustness</a>
+                    <a href="fba_analysis.php" class="dropdown-link">FBA Analysis</a>
+                    <a href="fva_analysis.php" class="dropdown-link">FVA Analysis</a>
+                    <a href="robustness_analysis.php" class="dropdown-link">Robustness Analysis</a>
+                    <a href="model_info.php" class="dropdown-link">Model Information</a>
                     <a href="#" class="dropdown-link">Expression Analysis</a>
                 </div>
             </li>

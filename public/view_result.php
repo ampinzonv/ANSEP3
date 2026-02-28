@@ -65,8 +65,12 @@ $smarty->assign('output', $sanitized_output);
 
 // Choose template based on analysis type (FBA is default)
 $template = 'analysis_result.tpl';
-if (isset($result_data['analysis_identity']['type']) && $result_data['analysis_identity']['type'] === 'FVA') {
-    $template = 'fva_result.tpl';
+if (isset($result_data['analysis_identity']['type'])) {
+    if ($result_data['analysis_identity']['type'] === 'FVA') {
+        $template = 'fva_result.tpl';
+    } elseif ($result_data['analysis_identity']['type'] === 'ROBUSTNESS') {
+        $template = 'robustness_result.tpl';
+    }
 }
 
 $smarty->display($template);
