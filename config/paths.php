@@ -12,7 +12,7 @@ define('CONDA_ENV', BASE_PATH . '/conda_env');
 
 // Rutas de almacenamiento
 define('SCRIPTS_PATH', BASE_PATH . '/scripts');
-define('RESULTS_VAULT', BASE_PATH . '/results_vault');
+define('RESULTS_VAULT', BASE_PATH . '/public/results_vault');
 
 // Configuración de Smarty
 define('SMARTY_TEMPLATES', BASE_PATH . '/templates');

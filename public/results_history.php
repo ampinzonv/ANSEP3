@@ -24,6 +24,7 @@ $stmt = $pdo->prepare("
         model_filename as model, 
         objective_value as objective, 
         status, 
+        execution_status,
         created_at as raw_date
     FROM simulations 
     WHERE user_id = ? 
@@ -42,12 +43,13 @@ foreach ($raw_history as $row) {
     }
 
     $history[] = [
-        'analysis_id' => $row['analysis_id'],
-        'name'        => $row['name'],
-        'date'        => $formatted_date,
-        'model'       => $row['model'],
-        'objective'   => $row['objective'],
-        'status'      => $row['status']
+        'analysis_id'     => $row['analysis_id'],
+        'name'            => $row['name'],
+        'date'            => $formatted_date,
+        'model'           => $row['model'],
+        'objective'       => $row['objective'],
+        'status'          => $row['status'],
+        'execution_status' => $row['execution_status']
     ];
 }
 

@@ -72,29 +72,50 @@
                 </div>
             </section>
 
-            <script>
-            function toggleTopN() {
-                const onlyActive = document.getElementById('only_active').checked;
-                const topNContainer = document.getElementById('top_n_container');
-                const topNInput = document.getElementById('top_n');
-                
-                if (!onlyActive) {
-                    // If not showing only active, default to show all (including zeros)
-                    topNInput.value = 'all';
-                    topNContainer.style.opacity = '0.5';
-                    topNInput.readOnly = true;
-                } else {
-                    topNInput.value = '20';
-                    topNContainer.style.opacity = '1';
-                    topNInput.readOnly = false;
-                }
-            }
-            </script>
-
             <div class="form-actions">
                 <button type="submit" class="btn-primary-large">Run FBA Simulation</button>
                 <button type="reset" class="btn-secondary">Reset Fields</button>
             </div>
         </form>
+
+        <!-- Loading Overlay -->
+        <div id="spinner-overlay" class="loading-overlay">
+            <div class="spinner-content">
+                <div class="modern-spinner"></div>
+                <div class="loading-text">Running metabolic simulation...</div>
+                <p class="text-muted" style="color: rgba(255,255,255,0.6); margin-top: 10px;">Please do not close this window.</p>
+            </div>
+        </div>
     </div>
+{/block}
+
+{block name="scripts"}
+<script src="js/simulation.js"></script>
+{literal}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize the FBA form with universal simulation logic
+        ANSEP.initSimulationForm('.analysis-form', 'spinner-overlay');
+    });
+
+    /**
+     * FBA-specific UI logic
+     */
+    function toggleTopN() {
+        const onlyActive = document.getElementById('only_active').checked;
+        const topNContainer = document.getElementById('top_n_container');
+        const topNInput = document.getElementById('top_n');
+        
+        if (!onlyActive) {
+            topNInput.value = 'all';
+            topNContainer.style.opacity = '0.5';
+            topNInput.readOnly = true;
+        } else {
+            topNInput.value = '20';
+            topNContainer.style.opacity = '1';
+            topNInput.readOnly = false;
+        }
+    }
+</script>
+{/literal}
 {/block}

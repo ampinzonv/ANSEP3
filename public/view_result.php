@@ -28,17 +28,24 @@ if (str_contains($analysis_id, '..') || str_contains($analysis_id, '/')) {
 
 $analysis_dir = RESULTS_VAULT . '/' . $user_id . '/' . $analysis_id;
 $json_file = $analysis_dir . '/' . $analysis_id . '.json';
+$log_file = $analysis_dir . '/execution.log'; // Logs are now saved here in async model
 
-if (!file_exists($json_file)) {
-    die("Error: Result file not found for ID: " . htmlspecialchars($analysis_id));
+// Load execution logs if they exist
+$output = "Result reference: " . $analysis_id;
+if (file_exists($log_file)) {
+    $output = file_get_contents($log_file);
 }
 
 // Load and decode JSON data
-$json_content = file_get_contents($json_file);
-$result_data = json_decode($json_content, true);
+$result_data = null;
+$success = false;
 
-if (!$result_data) {
-    die("Error: Could not parse result data.");
+if (file_exists($json_file)) {
+    $json_content = file_get_contents($json_file);
+    $result_data = json_decode($json_content, true);
+    if ($result_data) {
+        $success = true;
+    }
 }
 
 // Initialize Smarty

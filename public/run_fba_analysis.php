@@ -33,6 +33,17 @@ if (!$model) {
 
 // Define Paths
 $model_file = BASE_PATH . '/public/models/' . $model['model_filename'];
+
+// Pre-flight check: Ensure model file actually exists before launching
+if (!file_exists($model_file)) {
+    header('Content-Type: application/json');
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Model file not found on server: ' . $model['model_filename']
+    ]);
+    exit;
+}
+
 $timestamp = date('Ymd_His');
 $analysis_id = 'fba_result_' . $timestamp;
 $analysis_dir = RESULTS_VAULT . '/' . $user_id . '/' . $analysis_id;
@@ -43,10 +54,30 @@ if (!is_dir($analysis_dir)) {
     mkdir($analysis_dir, 0777, true);
 }
 
-// Construct Shell Command (Synchronous using direct python path)
+// 1. Initial Database Registration (Status: processing)
+try {
+    $stmt = $pdo->prepare("
+        INSERT INTO simulations 
+        (user_id, analysis_id, analysis_name, model_id, model_filename, execution_status) 
+        VALUES (?, ?, ?, ?, ?, 'processing')
+    ");
+    $stmt->execute([
+        $user_id,
+        $analysis_id,
+        $analysis_name,
+        $model_id,
+        $model['model_filename']
+    ]);
+} catch (PDOException $e) {
+    die("Error: Could not register analysis: " . $e->getMessage());
+}
+
+// 2. Construct Shell Command (Asynchronous using &)
 $env_python = CONDA_ENV . '/bin/python';
+$log_file = $analysis_dir . '/execution.log';
+
 $command = sprintf(
-    '%s %s --model %s --objective %s --output %s --name %s --only-active %s --top-n %s 2>&1',
+    '%s %s --model %s --objective %s --output %s --name %s --only-active %s --top-n %s > %s 2>&1 &',
     escapeshellarg($env_python),
     escapeshellarg(SCRIPTS_PATH . '/fba_analysis.py'),
     escapeshellarg($model_file),
@@ -54,57 +85,18 @@ $command = sprintf(
     escapeshellarg($output_file),
     escapeshellarg($analysis_name),
     escapeshellarg($only_active),
-    escapeshellarg($top_n)
+    escapeshellarg($top_n),
+    escapeshellarg($log_file)    // Direct logs to file
 );
 
-// Execute the command
-$output = shell_exec($command);
-$success = str_contains($output, 'Success:');
+// Execute the command in the background
+exec($command);
 
-// Read JSON data if successful and register in database
-$result_data = null;
-if ($success && file_exists($output_file)) {
-    $json_content = file_get_contents($output_file);
-    $result_data = json_decode($json_content, true);
-
-    if ($result_data) {
-        try {
-            // Prepare and execute database insertion
-            $stmt = $pdo->prepare("
-                INSERT INTO simulations 
-                (user_id, analysis_id, analysis_name, model_id, model_filename, objective_value, status) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            ");
-            $stmt->execute([
-                $user_id,
-                $analysis_id,
-                $analysis_name,
-                $model_id,
-                $model['model_filename'],
-                $result_data['simulation_results']['objective_value'],
-                $result_data['simulation_results']['status']
-            ]);
-        } catch (PDOException $e) {
-            // We log the error in the output for debugging but don't stop the flow
-            $output .= "\nWarning: Could not register analysis in database: " . $e->getMessage();
-        }
-    }
-}
-
-// Security: Sanitize paths in command and output to avoid Information Disclosure
-$sanitized_command = str_replace(BASE_PATH, '[ROOT]', $command);
-$sanitized_output  = str_replace(BASE_PATH, '[ROOT]', $output);
-
-// Logic to handle the view
-$smarty = require_once __DIR__ . '/../config/smarty_init.php';
-
-$smarty->assign('user_name', $_SESSION['user_name']);
-$smarty->assign('user_id', $user_id);
-$smarty->assign('analysis_id', $analysis_id);
-$smarty->assign('command', $sanitized_command);
-$smarty->assign('output', $sanitized_output);
-$smarty->assign('result_data', $result_data);
-$smarty->assign('result_file', basename($output_file));
-$smarty->assign('success', $success);
-
-$smarty->display('analysis_result.tpl');
+// 3. Return JSON Response for AJAX handling
+header('Content-Type: application/json');
+echo json_encode([
+    'status' => 'launched',
+    'analysis_id' => $analysis_id,
+    'message' => 'Simulation started in background.'
+]);
+exit;

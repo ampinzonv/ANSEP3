@@ -29,7 +29,7 @@
                 <a href="#" class="nav-link chevron">Model Exploration</a>
                 <div class="dropdown">
                     <a href="#" class="dropdown-link">Model Capacity</a>
-                    <a href="#" class="dropdown-link">Model Info</a>
+                    <a href="model_info.php" class="dropdown-link">Model Info</a>
                 </div>
             </li>
             <li class="nav-item">
@@ -41,6 +41,7 @@
                     <a href="#" class="dropdown-link">Expression Analysis</a>
                 </div>
             </li>
+            <li class="nav-item"><a href="results_history.php" class="nav-link">Results History</a></li>
             <li class="nav-item"><a href="#" class="nav-link">Microbiomes</a></li>
             <li class="nav-item"><a href="#" class="nav-link">Our Models</a></li>
             <li class="nav-item"><a href="#" class="nav-link">Documentation</a></li>

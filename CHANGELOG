@@ -1,13 +1,27 @@
-2026-02-25
-FEAT:   Implemented basic Smarty 5 initialization in `config/smarty_init.php`.
-FEAT:   Added root `index.php` for automatic redirection to login.
-FEAT:   Developed `login.php` controller and `login.tpl` with dual Login/Register functionality.
-FEAT:   Integrated MySQL database `ANSEP3` with `users` table via `scripts/setup_database.sql`.
-FEAT:   Implemented secure PDO connection in `config/database.php`.
-FEAT:   Integrated authentication logic using `password_hash` and `password_verify`.
-FEAT:   Established PHP session management for authenticated users.
-FEAT:   Created protected `loggedin.php` dashboard with user-specific greetings.
-FEAT:   Added `logout.php` to handle secure session termination.
+2026-02-28
+FEAT:   Implemented "Asynchronous Polling Engine" (v2) using file-based status for robust simulation monitoring.
+FEAT:   Redesigned "Results History" with a 1300px ultra-wide layout for enhanced data density.
+FEAT:   Migrated interface to "Sober" aesthetic: replaced all emojis/icons with ultra-lightweight inline SVGs.
+FEAT:   Achieved "Zero-Dependency" frontend by removing FontAwesome and external icon CDNs.
+FEAT:   Enhanced "Metabolic Exchange" visualization with a color-coded legend (Carbons, Gases, Amino Acids).
+FEAT:   Refined "Simulation Summary" (Hero) with a clean, white minimalist design and optimized font sizes.
+FEAT:   Removed all bold weights from results tables (Name, Result, Objective) for professional scannability.
+BUG:    Fixed asynchronous polling flow to ensure "Optimal" results are preserved across status checks.
+TODO:   Implement FVA analysis.
+
+2026-02-27
+FEAT:   Implemented TSV Export for FBA simulation results (full flux table download).
+FEAT:   Added "Delete" functionality to the Results History gallery with secure file cleanup.
+FEAT:   Implemented "Results History" (Gallery) to browse and re-view past FBA simulations.
+FEAT:   Refactored FBA results layout with a "Hero Summary" and interactive visualization thumbnails.
+FEAT:   Refactored exchange visualization to a minimalist "Barrier" design (vertical membrane line).
+FEAT:   Developed "Cell Port" (Membrane Visualization) for intuitive environmental exchange analysis.
+FEAT:   Implemented "Metabolic Flux Ranking" chart with dynamic height scaling for long lists.
+FEAT:   Implemented "Metabolic Heavyweights" (Flux Ranking) chart with custom color-coding and annotations.
+FEAT:   Transitioned FBA results to structured JSON format for better data handling and visualization.
+FEAT:   Developed a structured "Simulation Summary" view with automatic JSON parsing and display.
+FEAT:   Added grid and table layouts to `platform.css` for professional analytical result presentation.
+
 
 2026-02-26
 FEAT:   Implemented the full FBA execution cycle: `run_fba_analysis.php` (PHP runner) and `fba_analysis.py` (COBRApy core).
@@ -24,4 +38,17 @@ NOTE:   Project structure follows a clean separation of concerns (config, public
 TODO: Implement a JSON output of results.
 TODO: Results must be saved in a folder and database, because some results also have figures, pdfs or other type of data.
 TODO: Implement a way of retriving the results from the database and folder.
+
+
+2026-02-25
+FEAT:   Implemented basic Smarty 5 initialization in `config/smarty_init.php`.
+FEAT:   Added root `index.php` for automatic redirection to login.
+FEAT:   Developed `login.php` controller and `login.tpl` with dual Login/Register functionality.
+FEAT:   Integrated MySQL database `ANSEP3` with `users` table via `scripts/setup_database.sql`.
+FEAT:   Implemented secure PDO connection in `config/database.php`.
+FEAT:   Integrated authentication logic using `password_hash` and `password_verify`.
+FEAT:   Established PHP session management for authenticated users.
+FEAT:   Created protected `loggedin.php` dashboard with user-specific greetings.
+FEAT:   Added `logout.php` to handle secure session termination.
+
 

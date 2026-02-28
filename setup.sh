@@ -40,6 +40,6 @@ touch templates/layout.tpl
 touch .gitignore
 echo "vendor/" >> .gitignore
 echo "conda_env/" >> .gitignore
-echo "results_vault/" >> .gitignore
+echo "public/results_vault/" >> .gitignore
 
 echo "Estructura 'ansep-mpv' creada con éxito."

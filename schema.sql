@@ -35,15 +35,15 @@ CREATE TABLE `models` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `usuarios`
+-- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `usuarios`;
+DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `usuarios` (
+CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(100) NOT NULL,
+  `name` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
@@ -60,4 +60,27 @@ CREATE TABLE `usuarios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-26  8:54:12
+--
+-- Table structure for table `simulations`
+--
+
+DROP TABLE IF EXISTS `simulations`;
+CREATE TABLE `simulations` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `analysis_id` varchar(100) NOT NULL,
+  `analysis_name` varchar(255) NOT NULL,
+  `model_id` int DEFAULT NULL,
+  `model_filename` varchar(255) DEFAULT NULL,
+  `objective_value` double DEFAULT NULL,
+  `status` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `analysis_id` (`analysis_id`),
+  KEY `user_id` (`user_id`),
+  KEY `model_id` (`model_id`),
+  CONSTRAINT `simulations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `simulations_ibfk_2` FOREIGN KEY (`model_id`) REFERENCES `models` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dump completed on 2026-02-27  10:15:00
