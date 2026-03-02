@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{block name="title"}Platform - ANSEP3{/block}</title>
-    <link rel="stylesheet" href="css/platform.css">
+    <link rel="stylesheet" href="css/platform.css?v=20260302">
     {block name="head"}{/block}
 </head>
 <body>

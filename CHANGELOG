@@ -8,6 +8,11 @@ FEAT:    Reorganized navigation: moved "Models Information" to Documentation and
 BUG:     Fixed Smarty syntax errors by replacing incompatible modifiers (`abs`, `reset`) with native logic.
 BUG:     Fixed regression in `run_expression_analysis.php` where directory and ID variables were missing.
 CLEANUP:  Removed obsolete research scripts (`test_imat.py`, `test_fastcore.py`) from the production backend.
+TODO: Generate User and Developer Documentation.
+TODO: Implement Microbiome Section and Analysis.
+TODO: Implement results Comparison.
+TODO: Implement Model Import.
+TODO: resolve the issue with the uptake sign. Some models seems to use "-" other "+".
 
 2026-02-28
 FEAT:   Implemented "Asynchronous Polling Engine" (v2) using file-based status for robust simulation monitoring.
