@@ -2,3 +2,4 @@ vendor/
 conda_env/
 templates_c/
 public/results_vault/
+public/models/Astrocyte_Mendoza2022.xml
