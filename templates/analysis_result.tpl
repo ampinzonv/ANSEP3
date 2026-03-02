@@ -39,6 +39,23 @@
                         <span class="value">{$result_data.simulation_results.status|escape}</span>
                     </div>
                 </div>
+
+                {if isset($result_data.simulation_results.missing_strategy) || isset($result_data.simulation_results.scaled)}
+                <div class="hero-stats mt-3" style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1rem; margin-top: 1rem;">
+                    {if isset($result_data.simulation_results.missing_strategy)}
+                    <div class="stat-group">
+                        <span class="label">Missing Data</span>
+                        <span class="value">{$result_data.simulation_results.missing_strategy|capitalize}</span>
+                    </div>
+                    {/if}
+                    {if isset($result_data.simulation_results.scaled)}
+                    <div class="stat-group">
+                        <span class="label">Scaling</span>
+                        <span class="value">{if $result_data.simulation_results.scaled}Enabled (0-1000){else}Standard{/if}</span>
+                    </div>
+                    {/if}
+                </div>
+                {/if}
             </div>
 
             <!-- 2. Visualization Thumbnails grid -->
@@ -86,14 +103,37 @@
                     <thead>
                         <tr>
                             <th>Reaction ID</th>
-                            <th>Flux Value (mmol/gDW/hr)</th>
+                            <th class="text-end">Flux Value (mmol/gDW/hr)</th>
+                            <th class="text-center" style="width: 25%">Intensity</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {* Calculate max flux for intensity bars safely without abs modifier *}
+                        {assign var="max_abs_flux" value=1.0}
+                        {foreach $result_data.fluxes as $f}
+                            {assign var="abs_val" value=$f.value}
+                            {if $abs_val < 0}
+                                {assign var="abs_val" value=$abs_val * -1}
+                            {/if}
+                            {if $abs_val > $max_abs_flux}
+                                {assign var="max_abs_flux" value=$abs_val}
+                            {/if}
+                        {/foreach}
+
                         {foreach $result_data.fluxes as $rxn_id => $flux_info}
                             <tr>
                                 <td><code title="{$flux_info.name|escape}">{$rxn_id}</code></td>
-                                <td class="flux-cell">{$flux_info.value|string_format:"%.6f"}</td>
+                                <td class="text-end flux-cell">{$flux_info.value|string_format:"%.6f"}</td>
+                                <td class="text-center">
+                                    {assign var="cur_abs" value=$flux_info.value}
+                                    {if $cur_abs < 0}
+                                        {assign var="cur_abs" value=$cur_abs * -1}
+                                    {/if}
+                                    {assign var="perc" value=($cur_abs / $max_abs_flux) * 100}
+                                    <div class="progress" style="height: 8px; background: #eef2f7; border-radius: 4px; overflow: hidden; margin-top: 6px; width: 100%;">
+                                        <div class="progress-bar" style="width: {$perc}%; background: var(--accent); height: 100%; transition: width 0.6s ease;"></div>
+                                    </div>
+                                </td>
                             </tr>
                         {/foreach}
                     </tbody>

@@ -26,26 +26,22 @@
                 <a href="loggedin.php" class="nav-link">Home</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link chevron">Model Exploration</a>
-                <div class="dropdown">
-                    <a href="#" class="dropdown-link">Model Capacity</a>
-                    <a href="model_info.php" class="dropdown-link">Model Info</a>
-                </div>
-            </li>
-            <li class="nav-item">
                 <a href="#" class="nav-link chevron">Model Analysis</a>
                 <div class="dropdown">
                     <a href="fba_analysis.php" class="dropdown-link">FBA Analysis</a>
                     <a href="fva_analysis.php" class="dropdown-link">FVA Analysis</a>
                     <a href="robustness_analysis.php" class="dropdown-link">Robustness Analysis</a>
-                    <a href="model_info.php" class="dropdown-link">Model Information</a>
-                    <a href="#" class="dropdown-link">Expression Analysis</a>
+                    <a href="expression_analysis.php" class="dropdown-link">Expression Analysis</a>
                 </div>
             </li>
             <li class="nav-item"><a href="results_history.php" class="nav-link">Results History</a></li>
             <li class="nav-item"><a href="#" class="nav-link">Microbiomes</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Our Models</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Documentation</a></li>
+            <li class="nav-item">
+                <a href="#" class="nav-link chevron">Documentation</a>
+                <div class="dropdown">
+                    <a href="model_info.php" class="dropdown-link">Models Information</a>
+                </div>
+            </li>
             <li class="nav-item"><a href="#" class="nav-link">Contact us</a></li>
         </ul>
     </nav>

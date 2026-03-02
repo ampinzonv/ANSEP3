@@ -70,6 +70,8 @@ if (isset($result_data['analysis_identity']['type'])) {
         $template = 'fva_result.tpl';
     } elseif ($result_data['analysis_identity']['type'] === 'ROBUSTNESS') {
         $template = 'robustness_result.tpl';
+    } elseif ($result_data['analysis_identity']['type'] === 'EXPRESSION') {
+        $template = 'analysis_result.tpl';
     }
 }
 

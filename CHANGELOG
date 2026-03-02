@@ -1,3 +1,14 @@
+2026-03-02
+REFACTOR: Standardized Expression Analysis to use `exp2flux` exclusively, removing iMAT/Fastcore dependencies.
+REFACTOR: Consolidated shared visualization utilities (Flux Ranking, Barrier Plots) in `scripts/common_utils.py`.
+FEAT:    Enhanced `analysis_result.tpl` with dynamic "Intensity" bars and specialized metadata reporting.
+FEAT:    Migrated Expression results to use the universal `analysis_result.tpl` for superior UI consistency.
+FEAT:    Added "Analysis Name" field to Expression Analysis for improved simulation tracking.
+FEAT:    Reorganized navigation: moved "Models Information" to Documentation and simplified "Model Analysis" menu.
+BUG:     Fixed Smarty syntax errors by replacing incompatible modifiers (`abs`, `reset`) with native logic.
+BUG:     Fixed regression in `run_expression_analysis.php` where directory and ID variables were missing.
+CLEANUP:  Removed obsolete research scripts (`test_imat.py`, `test_fastcore.py`) from the production backend.
+
 2026-02-28
 FEAT:   Implemented "Asynchronous Polling Engine" (v2) using file-based status for robust simulation monitoring.
 FEAT:   Redesigned "Results History" with a 1300px ultra-wide layout for enhanced data density.
