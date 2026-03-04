@@ -1,3 +1,6 @@
+2026-03-04
+CLEANUP: added models to .gitignore. Too big to be deposited.
+
 2026-03-02
 REFACTOR: Standardized Expression Analysis to use `exp2flux` exclusively, removing iMAT/Fastcore dependencies.
 REFACTOR: Consolidated shared visualization utilities (Flux Ranking, Barrier Plots) in `scripts/common_utils.py`.
