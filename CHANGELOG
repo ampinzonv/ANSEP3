@@ -1,5 +1,8 @@
 2026-03-04
 CLEANUP: added models to .gitignore. Too big to be deposited.
+NOTE: full testing of overall behaviour. 
+FEAT: added synthetic data expression analysis for Mendoza's model.
+NOTE: Creating a new tag (v0.3-alpha) over this version.
 
 2026-03-02
 REFACTOR: Standardized Expression Analysis to use `exp2flux` exclusively, removing iMAT/Fastcore dependencies.
