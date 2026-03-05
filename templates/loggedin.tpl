@@ -15,7 +15,7 @@
             <h2>Brain Cell Metabolic Models</h2>
             <p>Designed to simulate the biochemical processes within neurons and glial cells, providing insights into their metabolic interactions and energy dynamics.<br><br>
             These models help researchers explore how cellular metabolism contributes to brain function and its role in neurodegenerative diseases, paving the way for targeted therapeutic strategies.</p>
-            <a href="#" class="btn-card-info">More info on our brain cell models</a>
+            <a href="model_info.php" class="btn-card-info">More info on our brain cell models</a>
         </div>
 
         <!-- Card 2: Microbiota Metabolic Models -->
@@ -26,7 +26,7 @@
             <h2>Microbiota Metabolic Models</h2>
             <p>By simulating metabolic exchanges and community dynamics, our microbiota models provide valuable insights into the relationships between the human microbiota and the brain.<br><br>
             This research is at the forefront of understanding how microbial imbalances may contribute to neurodegenerative conditions, paving the way for innovative treatments and preventive strategies.</p>
-            <a href="#" class="btn-card-info">More info on our Microbiome models</a>
+            <a href="microbiome.php" class="btn-card-info">More info on our Microbiome models</a>
         </div>
 
         <!-- Card 3: Online metabolic modeling -->

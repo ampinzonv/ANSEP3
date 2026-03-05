@@ -35,14 +35,18 @@
                 </div>
             </li>
             <li class="nav-item"><a href="results_history.php" class="nav-link">Results History</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Microbiomes</a></li>
+            <li class="nav-item"><a href="microbiome.php" class="nav-link">Microbiomes</a></li>
             <li class="nav-item">
                 <a href="#" class="nav-link chevron">Documentation</a>
                 <div class="dropdown">
+                    <a href="docs_fba.php" class="dropdown-link">FBA Documentation</a>
+                    <a href="docs_fva.php" class="dropdown-link">FVA Documentation</a>
+                    <a href="docs_robustness.php" class="dropdown-link">Robustness Documentation</a>
+                    <a href="docs_expression.php" class="dropdown-link">Expression Documentation</a>
                     <a href="model_info.php" class="dropdown-link">Models Information</a>
                 </div>
             </li>
-            <li class="nav-item"><a href="#" class="nav-link">Contact us</a></li>
+            <li class="nav-item"><a href="contact.php" class="nav-link">Contact us</a></li>
         </ul>
     </nav>
 
