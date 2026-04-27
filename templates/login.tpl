@@ -20,7 +20,7 @@
                 </div>
             {/if}
             <div style="text-align: center; margin-bottom: 2rem;">
-                <img src="../public/img/logo.png" alt="ANSEP3 Logo" width="300" height="100">
+                <img src="img/logo.png" alt="ANSEP3 Logo" width="300" height="100">
             </div>
             <h2 id="form-title" style="margin-top: 0; text-align: center; font-weight: 500;">Sign In</h2>
             <form id="auth-form" method="POST" action="login.php">

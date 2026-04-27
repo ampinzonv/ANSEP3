@@ -1,25 +1,25 @@
 # Guía de Migración a Producción — ANSEP3
 
-> **Stack:** PHP + Smarty · MySQL · Python/CobraPy (Conda) · Apache/Nginx  
+> **Stack:** PHP + Smarty · MySQL · Python/CobraPy (Conda) · Nginx  
 > **Origen:** MAMP local (`/Applications/MAMP/htdocs/ansep3`)  
-> **Destino:** VPS Linux (Ubuntu 22.04 recomendado)
+> **Destino:** VPS `168.176.61.231` — accesible en `http://168.176.61.231/ansep3`
 
 ---
 
 ## 1. Requisitos en el VPS
 
 ```bash
-# PHP 8.1+ con extensiones necesarias
+# Agregar repositorio de PHP
+sudo apt install -y software-properties-common
+sudo add-apt-repository ppa:ondrej/php -y
 sudo apt update
-sudo apt install -y php8.1 php8.1-cli php8.1-fpm php8.1-pdo php8.1-mysql \
-                   php8.1-mbstring php8.1-xml php8.1-zip
+
+# PHP 8.4 + extensiones necesarias
+sudo apt install -y php8.4 php8.4-cli php8.4-fpm php8.4-pdo php8.4-mysql \
+                   php8.4-mbstring php8.4-xml php8.4-zip
 
 # MySQL 8
 sudo apt install -y mysql-server
-
-# Apache (o Nginx si prefieres)
-sudo apt install -y apache2
-sudo a2enmod rewrite
 
 # Composer
 curl -sS https://getcomposer.org/installer | php
@@ -30,29 +30,24 @@ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O mi
 bash miniconda.sh -b -p /opt/miniconda3
 echo 'export PATH="/opt/miniconda3/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
+
+# Aceptar términos de servicio de Conda (requerido desde versiones recientes)
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
 ```
 
 ---
 
 ## 2. Transferir los Archivos
 
-### Opción A — rsync (recomendado)
-
 ```bash
-# Desde tu Mac, excluye conda_env (se reinstala en el servidor) y templates_c
+# Desde tu Mac — excluye lo que se reconstruye en el servidor
 rsync -avz --exclude='conda_env/' \
            --exclude='templates_c/' \
            --exclude='vendor/' \
            --exclude='.git/' \
            /Applications/MAMP/htdocs/ansep3/ \
-           usuario@TU_SERVIDOR_IP:/var/www/ansep3/
-```
-
-### Opción B — Git
-
-```bash
-# En el servidor
-git clone https://github.com/tu-usuario/ansep3.git /var/www/ansep3
+           usuario@168.176.61.231:/var/www/html/ansep3/
 ```
 
 ---
@@ -60,7 +55,7 @@ git clone https://github.com/tu-usuario/ansep3.git /var/www/ansep3
 ## 3. Instalar Dependencias PHP
 
 ```bash
-cd /var/www/ansep3
+cd /var/www/html/ansep3
 composer install --no-dev --optimize-autoloader
 ```
 
@@ -71,7 +66,7 @@ composer install --no-dev --optimize-autoloader
 El `conda_env` no se transfiere — se reconstruye en el servidor:
 
 ```bash
-cd /var/www/ansep3
+cd /var/www/html/ansep3
 /opt/miniconda3/bin/conda create --prefix ./conda_env python=3.10 -c conda-forge -y
 ./conda_env/bin/pip install python-libsbml cobra pandas matplotlib
 
@@ -84,7 +79,6 @@ cd /var/www/ansep3
 ## 5. Configurar la Base de Datos
 
 ```bash
-# Crear DB y usuario seguro (NO usar root en producción)
 sudo mysql -u root
 ```
 
@@ -97,14 +91,14 @@ EXIT;
 ```
 
 ```bash
-# Importar el esquema
-mysql -u ansep3_user -p ANSEP3 < /var/www/ansep3/scripts/setup_database.sql
+# Exportar desde MAMP (en tu Mac)
+/Applications/MAMP/Library/bin/mysql80/bin/mysqldump -u root -proot ANSEP3 > ansep3_dump.sql
 
-# Si tienes datos existentes, exportar desde MAMP primero:
-# (en tu Mac)
-/Applications/MAMP/Library/bin/mysqldump -u root -proot ANSEP3 > ansep3_dump.sql
-# Luego transferir y ejecutar en el servidor:
-mysql -u ansep3_user -p ANSEP3 < ansep3_dump.sql
+# Transferir al servidor
+scp ansep3_dump.sql usuario@168.176.61.231:/var/www/html/ansep3/
+
+# Importar en el servidor
+mysql -u ansep3_user -p ANSEP3 < /var/www/html/ansep3/ansep3_dump.sql
 ```
 
 ---
@@ -113,8 +107,6 @@ mysql -u ansep3_user -p ANSEP3 < ansep3_dump.sql
 
 ### `config/paths.php` — CRÍTICO
 
-Reemplaza **todas** las rutas de MAMP con las del VPS:
-
 ```php
 <?php
 /**
@@ -122,9 +114,8 @@ Reemplaza **todas** las rutas de MAMP con las del VPS:
  * Entorno: PRODUCCIÓN
  */
 
-define('BASE_PATH', '/var/www/ansep3');
+define('BASE_PATH', '/var/www/html/ansep3');
 
-// Conda instalado en /opt/miniconda3 en el servidor
 define('CONDA_BIN', '/opt/miniconda3/bin/conda');
 define('CONDA_ENV', BASE_PATH . '/conda_env');
 
@@ -135,8 +126,7 @@ define('SMARTY_TEMPLATES', BASE_PATH . '/templates');
 define('SMARTY_COMPILE', BASE_PATH . '/templates_c');
 define('SMARTY_CACHE', BASE_PATH . '/cache');
 
-// Cambia esto por tu dominio real
-define('BASE_URL', 'https://tudominio.com');
+define('BASE_URL', 'http://168.176.61.231/ansep3');
 ```
 
 ### `config/database.php` — CRÍTICO
@@ -145,8 +135,8 @@ define('BASE_URL', 'https://tudominio.com');
 <?php
 $host    = 'localhost';
 $db      = 'ANSEP3';
-$user    = 'ansep3_user';       // usuario creado en paso 5
-$pass    = 'CONTRASEÑA_SEGURA'; // la contraseña real
+$user    = 'ansep3_user';
+$pass    = 'CONTRASEÑA_SEGURA';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
@@ -170,78 +160,94 @@ try {
 ## 7. Permisos de Directorios
 
 ```bash
-# Propietario: www-data (usuario de Apache)
-sudo chown -R www-data:www-data /var/www/ansep3
+# Crear directorios que no vienen en el rsync
+mkdir -p /var/www/html/ansep3/templates_c
+mkdir -p /var/www/html/ansep3/cache
+mkdir -p /var/www/html/ansep3/public/results_vault
 
-# Directorios que necesitan escritura
-sudo chmod -R 775 /var/www/ansep3/templates_c
-sudo chmod -R 775 /var/www/ansep3/public/results_vault
-sudo chmod -R 775 /var/www/ansep3/cache   # si existe
+# Directorios de caché para paquetes Python (CobraPy, Matplotlib)
+# Necesarios para que www-data pueda escribir al ejecutar scripts
+sudo mkdir -p /var/www/.cache/cobrapy
+sudo mkdir -p /var/www/.config/matplotlib
+sudo mkdir -p /var/www/.local
+sudo chown -R www-data:www-data /var/www/.cache /var/www/.config /var/www/.local
+sudo chmod -R 775 /var/www/.cache /var/www/.config /var/www/.local
 
-# El usuario actual en el grupo www-data (para poder editar archivos)
+# Permisos generales del proyecto
+sudo chmod -R 775 /var/www/html/ansep3/templates_c
+sudo chmod -R 775 /var/www/html/ansep3/cache
+sudo chmod -R 775 /var/www/html/ansep3/public/results_vault
+sudo chown -R www-data:www-data /var/www/html/ansep3
+
+# Agregar tu usuario al grupo www-data
 sudo usermod -aG www-data $USER
 ```
 
 ---
 
-## 8. Virtual Host Apache
+## 8. Configuración Nginx
 
 ```bash
-sudo nano /etc/apache2/sites-available/ansep3.conf
+sudo nano /etc/nginx/sites-available/ansep3
 ```
 
-```apache
-<VirtualHost *:80>
-    ServerName tudominio.com
-    ServerAlias www.tudominio.com
+```nginx
+server {
+    listen 80;
+    server_name 168.176.61.231;
 
-    DocumentRoot /var/www/ansep3/public
+    # /ansep3 apunta a la carpeta /public del proyecto
+    location /ansep3 {
+        alias /var/www/html/ansep3/public;
+        index index.php index.html;
+        try_files $uri $uri/ @ansep3_php;
+    }
 
-    <Directory /var/www/ansep3/public>
-        AllowOverride All
-        Require all granted
-    </Directory>
+    location @ansep3_php {
+        rewrite ^/ansep3(.*)$ /ansep3/index.php?$query_string last;
+    }
 
-    # Logs
-    ErrorLog ${APACHE_LOG_DIR}/ansep3_error.log
-    CustomLog ${APACHE_LOG_DIR}/ansep3_access.log combined
-</VirtualHost>
+    # Captura el path relativo con $1 para evitar duplicar /ansep3 en SCRIPT_FILENAME
+    location ~ ^/ansep3/(.+\.php)$ {
+        fastcgi_pass unix:/run/php/php8.4-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME /var/www/html/ansep3/public/$1;
+        include fastcgi_params;
+    }
+
+    # Bloquear acceso directo a directorios sensibles
+    location ~* ^/ansep3/(config|scripts|templates|vendor)/ {
+        deny all;
+    }
+
+    error_log /var/log/nginx/ansep3_error.log;
+    access_log /var/log/nginx/ansep3_access.log;
+}
 ```
 
 ```bash
-sudo a2ensite ansep3.conf
-sudo a2dissite 000-default.conf
-sudo systemctl reload apache2
-```
+# Activar el sitio y desactivar el default
+sudo ln -s /etc/nginx/sites-available/ansep3 /etc/nginx/sites-enabled/
+sudo rm /etc/nginx/sites-enabled/default
 
-### HTTPS con Let's Encrypt (recomendado)
-
-```bash
-sudo apt install -y certbot python3-certbot-apache
-sudo certbot --apache -d tudominio.com -d www.tudominio.com
+sudo nginx -t
+sudo systemctl reload nginx
 ```
 
 ---
 
-## 9. Configurar PHP para Ejecución de Scripts Python
-
-Los scripts Python se ejecutan vía `shell_exec()` desde PHP. El usuario `www-data` debe poder correr Conda:
+## 9. Iniciar PHP 8.4-FPM
 
 ```bash
-# Verificar que www-data puede ejecutar python del conda_env
-sudo -u www-data /var/www/ansep3/conda_env/bin/python -c "import cobra; print('OK')"
+sudo systemctl enable php8.4-fpm
+sudo systemctl start php8.4-fpm
+sudo systemctl status php8.4-fpm
 ```
 
-Si falla, ajustar permisos del conda_env:
+### Ajustar php.ini para análisis largos
 
 ```bash
-sudo chmod -R 755 /var/www/ansep3/conda_env/bin
-```
-
-### Aumentar tiempo de ejecución PHP (los análisis pueden tardar)
-
-```bash
-sudo nano /etc/php/8.1/apache2/php.ini
+sudo nano /etc/php/8.4/fpm/php.ini
 ```
 
 ```ini
@@ -252,26 +258,39 @@ post_max_size = 50M
 ```
 
 ```bash
-sudo systemctl restart apache2
+sudo systemctl restart php8.4-fpm
+sudo systemctl reload nginx
 ```
 
 ---
 
-## 10. Verificación Final
+## 10. Permisos de Ejecución Python para www-data
+
+```bash
+# Verificar que www-data puede ejecutar python del conda_env
+sudo -u www-data /var/www/html/ansep3/conda_env/bin/python -c "import cobra; print('OK')"
+
+# Si falla con permisos
+sudo chmod -R 755 /var/www/html/ansep3/conda_env/bin
+```
+
+---
+
+## 11. Verificación Final
 
 ```bash
 # 1. PHP conecta a MySQL
-php -r "require '/var/www/ansep3/config/database.php'; echo 'DB OK\n';"
+php -r "require '/var/www/html/ansep3/config/database.php'; echo 'DB OK\n';"
 
-# 2. Smarty compila templates (intentar renderizar)
-curl -I http://tudominio.com/login.php
+# 2. Acceso web desde el servidor
+curl -I http://localhost/ansep3
 
 # 3. Script Python funciona
-sudo -u www-data /var/www/ansep3/conda_env/bin/python \
-    /var/www/ansep3/scripts/fba_analysis.py --help
+sudo -u www-data /var/www/html/ansep3/conda_env/bin/python \
+    /var/www/html/ansep3/scripts/fba_analysis.py --help
 
-# 4. Logs de Apache si algo falla
-sudo tail -f /var/log/apache2/ansep3_error.log
+# 4. Logs si algo falla
+sudo tail -f /var/log/nginx/ansep3_error.log
 ```
 
 ---
@@ -280,22 +299,29 @@ sudo tail -f /var/log/apache2/ansep3_error.log
 
 | Archivo | Cambio |
 |---|---|
-| `config/paths.php` | BASE_PATH, CONDA_BIN, BASE_URL |
-| `config/database.php` | user, pass (nunca usar root) |
+| `config/paths.php` | BASE_PATH → `/var/www/html/ansep3`, BASE_URL → `http://168.176.61.231/ansep3` |
+| `config/database.php` | user, pass (nunca usar root en producción) |
+
+---
 
 ## Checklist
 
-- [ ] Servidor con PHP 8.1+, MySQL 8, Apache
-- [ ] Miniconda instalado en `/opt/miniconda3`
+- [ ] PHP 8.4 instalado (vía PPA `ondrej/php`)
+- [ ] MySQL 8 instalado y corriendo
+- [ ] Nginx instalado y corriendo
+- [ ] PHP 8.4-FPM habilitado e iniciado
+- [ ] Miniconda instalado en `/opt/miniconda3` y ToS aceptados
 - [ ] Archivos transferidos con rsync (sin `conda_env/`, `vendor/`, `templates_c/`)
-- [ ] `composer install` ejecutado
+- [ ] `composer install` ejecutado en `/var/www/html/ansep3`
 - [ ] `conda_env` recreado en el servidor
-- [ ] Base de datos creada con usuario dedicado
-- [ ] `config/paths.php` actualizado
-- [ ] `config/database.php` actualizado
-- [ ] Permisos de `templates_c/` y `results_vault/` en 775
-- [ ] Virtual host configurado y activo
-- [ ] HTTPS habilitado con Certbot
-- [ ] `php.ini` con `max_execution_time = 300`
-- [ ] Prueba de login exitosa
+- [ ] Base de datos creada con usuario dedicado e importada
+- [ ] `config/paths.php` actualizado con rutas del VPS
+- [ ] `config/database.php` actualizado con credenciales de producción
+- [ ] Directorios `templates_c/`, `cache/` y `results_vault/` creados con permisos 775
+- [ ] Directorios `/var/www/.cache`, `/var/www/.config`, `/var/www/.local` creados para www-data
+- [ ] `www-data` como propietario de todo el proyecto
+- [ ] Sitio `default` de Nginx desactivado
+- [ ] Virtual host `ansep3` activado en Nginx con socket `php8.4-fpm.sock`
+- [ ] `php.ini` (FPM) con `max_execution_time = 300`
+- [ ] Prueba de login exitosa en `http://168.176.61.231/ansep3`
 - [ ] Prueba de análisis FBA exitosa
